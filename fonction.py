@@ -23,10 +23,11 @@ def modif_champs(layer,champs,valeur, champs_a_modifier,new_valeur):
 
 
 def afficheDoc():
-    if not os.path.isfile(os.path.dirname(__file__) + "/assistant complexe.docx"):
+    fichier = os.path.join(os.path.dirname(__file__), "assistant complexe.pdf")
+    if not os.path.isfile(fichier):
         afficheerreur("La documentation est introuvable", "Information")
     else:
-        os.popen(os.path.dirname(__file__) + "/assistant complexe.docx")
+        subprocess.Popen(['start', '', fichier], shell=True)
 
 
 def afficherlog():
