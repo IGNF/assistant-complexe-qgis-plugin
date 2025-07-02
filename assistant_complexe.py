@@ -491,7 +491,7 @@ class Complexe:
         #     self.first_start = False
 
         self.dlg = ComplexeDialog()
-        self.dlg.setWindowTitle(TITRE)
+        self.dlg.setWindowTitle(f"{TITRE}  {VERSION}")
 
         # self.layer = self.iface.activeLayer()
         # TODO a verifier
@@ -507,7 +507,7 @@ class Complexe:
 
         self.dlgAProposDe.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.dlgAProposDe.pushButtonAffichedoc.clicked.connect(afficheDoc)
-        self.dlgAProposDe.setWindowTitle(TITRE)
+        self.dlgAProposDe.setWindowTitle(f"{TITRE}  {VERSION}")
 
         # gestion couleur de la sélection
         self.dlg.mColorButton.setColor(self.iface.mapCanvas().selectionColor())
