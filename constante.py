@@ -1,5 +1,5 @@
 
-TITRE = "Assisstant complexe"
+TITRE = "Assistant complexe"
 VERSION = "v1.1.0"
 
 LAYER_ESPACE_CO = ["troncon_de_route","route_numerotee_ou_nommee"]
