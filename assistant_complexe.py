@@ -25,13 +25,12 @@ from datetime import datetime
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QTableWidgetItem, QTableWidget, QDialog
 from PyQt5.uic import loadUi
+from qgis.core import Qgis
 
 from .assistant_complexe_dialog import ComplexeDialog
 from .fonction import *
 from .constante import *
 from .cheminpluscourt import *
-from .tableur import *
-
 
 class Complexe:
     """QGIS Plugin Implementation."""
@@ -48,19 +47,16 @@ class Complexe:
 
         self.dlg = None
         self.cheminpluscourt = None
-        self.tableur = None
 
         # dictionnaire cotenant les liens vers route nommées
         self.dico_lien_route_nommee = {}
 
-        # dictionnaire contenant les entités modifiées
-        # clé : cleabs
-        # valeur : (lien_vers AVANT, lien_vers APRES)
-        self.dico_undo = {}
-
         # declaration et instanciation du QDialog aproposde sans generer de fichier .py correspondant au .ui (donc sans pyuic)
         self.dlgAProposDe = QDialog()
         loadUi(os.path.dirname(__file__) + "/aproposde.ui",self.dlgAProposDe)
+
+    def afficheMessageBar(self, message):
+        self.iface.messageBar().pushMessage("Info", message, level=Qgis.Info, duration=5)
 
     def affiche_log(self):
         afficherlog()
@@ -83,31 +79,6 @@ class Complexe:
 
         # zoom sur la selection
         self.iface.actionZoomToSelected().trigger()
-
-    def undo(self):
-        # si le fichier de log est ouvert on quitte. il faut le fermer manuellement
-        if not self.tableur.log_is_open():
-            return
-        self.dlg.pushButtonUndo.setEnabled(False)
-        ligne_excel = []
-        idlienvers = self.layer.fields().indexFromName(LIEN_VERS_RTE_NOMMEE)
-        self.layer.startEditing()
-        for cle,valeur in self.dico_undo.items():
-            requete = QgsExpression(f"{CLEABS} = '{cle}'")
-            iterateur = self.layer.getFeatures(QgsFeatureRequest(requete))
-            ident = [i.id() for i in iterateur]
-
-            self.layer.changeAttributeValue(ident[0],idlienvers,valeur[0])
-
-            ligne_excel.append([datetime.today().strftime('%d %B %Y %H:%M'), "En cours de dévo",
-                                cle,
-                                valeur[1],
-                                valeur[0]])
-
-        self.layer.commitChanges()
-        self.tableur.adddonnees(ligne_excel)
-        self.tableur.sauvegarder()
-        self.getconstituants_complexe()
 
     # si une ligne est sélectionnée
     def is_complexe_sel(self):
@@ -228,46 +199,30 @@ class Complexe:
 
     def modifier_attribut(self,champs,valeur):
 
-        self.dlg.pushButtonUndo.setEnabled(True)
-
-        # si le fichier de log est ouvert on quitte. il faut le fermer manuellement
-        if not self.tableur.log_is_open():
-            return
-        ligne_excel = []
-
         idchamps = self.layer.fields().indexFromName(champs)
-        idcleabs = self.layer.fields().indexFromName(CLEABS)
         idlienvers = self.layer.fields().indexFromName(LIEN_VERS_RTE_NOMMEE)
         self.layer = self.iface.activeLayer()
         selection = self.layer.selectedFeatures()
-
-        self.dico_undo.clear()
 
         # remplacer les occurences de "NULL" en "" sur la variable valeur.
         # sinon plantage du modele
         valeur_sans_NULL = valeur.replace("NULL/","")
 
         self.layer.startEditing()
+        QGuiApplication.setOverrideCursor(Qt.WaitCursor)
+
         for sel in selection:
             attr = sel.attributes()
             # if attr[idlienvers] == "NULL":
             #     valeur = ""
             if attr[idlienvers] != valeur_sans_NULL:
-                ligne_excel.append([datetime.today().strftime('%d %B %Y %H:%M'), "En cours de dévo",
-                                    attr[idcleabs],
-                                    attr[idlienvers],
-                                    valeur_sans_NULL])
-
                 self.layer.changeAttributeValue(sel.id(), idchamps,valeur_sans_NULL)
-                # initialiser un dictionnaire pour le undo
-                self.dico_undo[attr[idcleabs]] = (attr[idlienvers], valeur_sans_NULL)
 
-        self.layer.commitChanges()
 
-        self.tableur.adddonnees(ligne_excel)
-        self.tableur.sauvegarder()
-        self.dlg.pushButtonLog.setEnabled(True)
         self.dlg.pushButtonSelConstituants.setEnabled(True)
+        QGuiApplication.restoreOverrideCursor()
+        self.afficheMessageBar(
+            f"Les modifications ont été effectués sur : {self.layer.selectedFeatureCount()} tronçon(s)")
 
     # selectionne tous les troncons du complexe choisi dans la tablewidget
     # par le bouton : pushButtonSelConstituants
@@ -403,10 +358,6 @@ class Complexe:
         else:
             self.dlg.label_nbselection.setText(f"<span style='color: red'><b>{nbsel}</b></span> entité(s) sélectionnée(s)")
 
-        # if not self.dlg.isVisible():
-        #     return
-
-
         # gestion de la couleur de selection
         couleur = self.dlg.mColorButton.color()
         self.iface.mapCanvas().setSelectionColor(couleur)
@@ -421,7 +372,6 @@ class Complexe:
             self.dlg.pushButtonRetirer.setEnabled(True)
             self.dlg.pushButtonAjouter.setEnabled(True)
             self.dlg.pushButtonSelConstituants.setEnabled(True)
-
 
         if not self.dlg.checkBoxFixer.isChecked():
             self.set_dico_lien_route_nommee()
@@ -516,9 +466,6 @@ class Complexe:
         # instanciation de la class dhemin le plus court
         self.cheminpluscourt = cheminpluscourt(self.iface, self.layer)
 
-        # instanciation du tableur pour le log
-        self.tableur = Tableur()
-
         # est ce que les layer de l'espace co sont disponibles
         if not self.islayer_espaceco():
             return
@@ -528,9 +475,6 @@ class Complexe:
         layer  = project.mapLayersByName(LAYER_ESPACE_CO[1])
         self.layer_rte_nommee = layer[0]
 
-
-        # "fixer" est coché par defaut
-        # self.dlg.checkBoxFixer.setChecked(False)
         self.dlg.label_check.setStyleSheet("font-weight: bold")
 
         # personnaliser l'aspect du tablewidget
@@ -543,17 +487,9 @@ class Complexe:
         self.dlg.pushButtonSelConstituants.clicked.connect(self.getconstituants_complexe)
         self.dlg.pushButtonRetirer.clicked.connect(self.suppr_complexe)
         self.dlg.pushButtonAjouter.clicked.connect(self.add_complexe)
-        self.dlg.pushButtonLog.clicked.connect(self.affiche_log)
-        self.dlg.pushButtonUndo.clicked.connect(self.undo)
-        self.dlg.pushButtonUndo.setEnabled(False)
         self.dlg.pushButtonCheminCourt.clicked.connect(self.chemin_court)
         self.dlg.pushButtonAPropos.clicked.connect(self.apropos)
         self.dlg.checkBoxFixer.clicked.connect(self.clic_check)
-
-        # si le mog existe on active le bouton*
-        fic = os.path.dirname(__file__) + "/transaction.xlsx"
-        self.dlg.pushButtonLog.setEnabled(os.path.isfile(fic))
-
 
         # peronnalisation des boutons
         self.dlg.pushButtonSelConstituants.setStyleSheet("background-color: #30b300 ;font-weight: bold")
