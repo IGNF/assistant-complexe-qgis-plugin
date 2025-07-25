@@ -500,9 +500,11 @@ class Complexe:
         self.iface.mapCanvas().selectionChanged.connect(self.actualiserSelection)
         self.actualiserSelection()
 
-        self.dlg.setWindowFlags(Qt.WindowStaysOnTopHint)
-        # # show the dialog
+        # show the dialog
+        self.dlg.setParent(self.iface.mainWindow())
+        self.dlg.setWindowFlags(Qt.Dialog | Qt.WindowTitleHint | Qt.WindowCloseButtonHint)
         self.dlg.show()
+
         self.Add_complexe_in_tablewidget()
 
 
