@@ -350,6 +350,13 @@ class Complexe:
 
     def actualiserSelection(self):
 
+        # cas de chargement d'un nouveau projet sans relancer qgis
+        layer1 = QgsProject.instance().mapLayersByName(LAYER_ESPACE_CO[0])
+        layer2 = QgsProject.instance().mapLayersByName(LAYER_ESPACE_CO[1])
+        if not layer1 or not layer2:
+            return
+        self.layer = layer1[0]
+
         # print("actualisersel : ",self.layer.name())
         nbsel = self.layer.selectedFeatureCount()
         if nbsel > 40:
@@ -500,9 +507,11 @@ class Complexe:
         self.iface.mapCanvas().selectionChanged.connect(self.actualiserSelection)
         self.actualiserSelection()
 
-        self.dlg.setWindowFlags(Qt.WindowStaysOnTopHint)
-        # # show the dialog
+        # show the dialog
+        self.dlg.setParent(self.iface.mainWindow())
+        self.dlg.setWindowFlags(Qt.Dialog | Qt.WindowTitleHint | Qt.WindowCloseButtonHint)
         self.dlg.show()
+
         self.Add_complexe_in_tablewidget()
 
 
