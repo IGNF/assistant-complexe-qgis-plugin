@@ -271,7 +271,11 @@ class Complexe:
             self.dlg.tableWidget.setItem(compt, 0, QTableWidgetItem(attribut[0]))
             self.dlg.tableWidget.setItem(compt, 1, QTableWidgetItem(attribut[1]))
             self.dlg.tableWidget.setItem(compt, 2, QTableWidgetItem(attribut[2]))
-            self.dlg.tableWidget.setItem(compt, 3, QTableWidgetItem(attribut[3]))
+            # si le nom est NULL ou "" on affiche rien, sinon plantage du tablewidget
+            try:
+                self.dlg.tableWidget.setItem(compt, 3, QTableWidgetItem(attribut[3]))
+            except TypeError:
+                pass
             # taille des lignes (on peut pas plus petit que le contenant
             self.dlg.tableWidget.setRowHeight(compt, 1)
             compt +=1
@@ -323,7 +327,6 @@ class Complexe:
         # si la liste contient que des element vide ou "NULL
         if all(element == "" or element == "NULL" for element in liste_cleabs):
             return
-
 
         # recuperation des attributs de la route nommee corrspondant aux cleabs ci dessus
         # sur le layer route_numerotee_ou_nommee
@@ -441,14 +444,11 @@ class Complexe:
 
 
     def run(self):
-        # Create the dialog with elements  and keep reference
-        # Only create GUI ONCE in callback, so that it will only load when the plugin is started
-        # print(self.first_start)
-        # if self.first_start:
-        #     self.first_start = False
+        if self.dlg is not None:
+            return
 
         self.dlg = ComplexeDialog()
-        self.dlg.setWindowTitle(f"{TITRE}  {VERSION}")
+        self.dlg.setWindowTitle(f"{TITRE}")
 
         # self.layer = self.iface.activeLayer()
         # TODO a verifier
@@ -464,7 +464,7 @@ class Complexe:
 
         self.dlgAProposDe.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.dlgAProposDe.pushButtonAffichedoc.clicked.connect(afficheDoc)
-        self.dlgAProposDe.setWindowTitle(f"{TITRE}  {VERSION}")
+        self.dlgAProposDe.setWindowTitle(f"{TITRE}")
 
         # gestion couleur de la sélection
         self.dlg.mColorButton.setColor(self.iface.mapCanvas().selectionColor())
@@ -516,12 +516,14 @@ class Complexe:
 
 
         # Run the dialog event loop
-        # result = self.dlg.exec_()
-        # See if OK was pressed
-        # if result == 0:
-        #     print("fermeture")
+        result = self.dlg.exec_()
 
-        # if result:
-        #     # Do something useful here - delete the line containing pass and
-        #     # substitute with your code.
-        #     pass
+        if not result:
+            # on deconnecte le signal en quittant
+            try:
+                self.iface.mapCanvas().selectionChanged.disconnect(self.actualiserSelection)
+            except TypeError:
+                pass  # aucune connexion existante
+
+            # on réinitialise pour gere le rechargement si une seule instance
+            self.dlg = None
