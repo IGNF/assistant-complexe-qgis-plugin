@@ -21,11 +21,16 @@ jobs:
 
       - name: Build plugin zip
         run: |
-          zip -r "IGN_assistant-comp.zip" . -x ".git/*" ".github/*"
+          mkdir -p IGN_assistant-complexe
+          rsync -av --progress . IGN_assistant-complexe/ \
+            --exclude .git \
+            --exclude .github \
+            --exclude IGN_assistant-complexe
+          zip -r IGN_assistant-complexe.zip IGN_assistant-complexe
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: "IGN_assistant-comp.zip"
+          files: "IGN_assistant-complexe.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
