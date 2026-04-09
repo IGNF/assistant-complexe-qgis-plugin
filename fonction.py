@@ -5,8 +5,6 @@ from .constante import *
 from .mapping_version import *
 import subprocess
 
-
-
 def modif_attribut_byid(layer,liste,champs,nouveau):
     # liste = selection : selectedFeatures()
     for feature in liste:
@@ -19,24 +17,12 @@ def modif_champs(layer,champs,valeur, champs_a_modifier,new_valeur):
     for entite in layer.getFeatures():
         layer.changeAttributeValue(entite.id(), layer.fields().indexOf(champs_a_modifier), new_valeur)
 
-
 def afficheDoc():
     fichier = os.path.join(os.path.dirname(__file__), "assistant complexe.pdf")
     if not os.path.isfile(fichier):
         afficheerreur("La documentation est introuvable", "Information")
     else:
         subprocess.Popen(['start', '', fichier], shell=True)
-
-
-def afficherlog():
-    # fic = os.path.dirname(__file__) + "/log.txt"
-    fic = os.path.dirname(__file__) + "/transaction.xlsx"
-
-    if not os.path.isfile(fic):
-        afficheerreur("Le fichier de log n'existe pas\nIl sera crée dès la premiére transaction", "Information")
-    else:
-        subprocess.Popen(["start", "excel", fic], shell=True)
-
 
 def afficheerreur(text, titre=TITRE):
     msg = QMessageBox()
