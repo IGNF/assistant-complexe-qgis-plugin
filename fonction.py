@@ -1,10 +1,8 @@
 import os.path
-from qgis.PyQt.QtWidgets import QMessageBox
-from qgis.PyQt.QtCore import Qt
 from qgis.core import QgsFeatureRequest,QgsExpression
 
-from qgis.core import QgsCoordinateReferenceSystem, QgsProject
 from .constante import *
+from .mapping_version import *
 import subprocess
 
 
@@ -42,27 +40,27 @@ def afficherlog():
 
 def afficheerreur(text, titre=TITRE):
     msg = QMessageBox()
-    msg.setIcon(QMessageBox.Warning)
+    msg.setIcon(Warning)
     msg.setWindowTitle(titre)
-    msg.setStandardButtons(QMessageBox.Ok)
+    msg.setStandardButtons(Ok)
     msg.setText(text)
-    msg.setWindowFlags(Qt.WindowStaysOnTopHint)
+    msg.setWindowFlags(WindowStaysOnTopHint)
     msg.exec()
 
 
 def affichemessageAvertissement(text, titre):
     msg = QMessageBox()
-    msg.setIcon(QMessageBox.Warning)
+    msg.setIcon(Warning)
     msg.setWindowTitle(titre)
     msg.setText(text)
 
-    btnAnnuler = msg.addButton("Annuler", QMessageBox.RejectRole )
+    btnAnnuler = msg.addButton("Annuler", RejectRole )
     btnAnnuler.setStyleSheet("color:red ; font-weight: bold")
 
-    btnValider = msg.addButton("Retirer du complexe", QMessageBox.AcceptRole)
+    btnValider = msg.addButton("Retirer du complexe", AcceptRole)
     btnValider.setStyleSheet("color:green ; font-weight: bold")
 
-    msg.setWindowFlags(Qt.WindowStaysOnTopHint)
+    msg.setWindowFlags(WindowStaysOnTopHint)
     msg.exec()
 
     if msg.clickedButton() == btnAnnuler:

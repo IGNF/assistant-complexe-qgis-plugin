@@ -1,5 +1,5 @@
 from qgis.PyQt.QtCore import Qt
-from qgis.PyQt.QtWidgets import QTableWidget
+from qgis.PyQt.QtWidgets import QTableWidget,QMessageBox
 
 # QT6
 try :
@@ -11,6 +11,10 @@ try :
     NoEditTriggers = QTableWidget.EditTrigger.NoEditTriggers
     SelectRows = QTableWidget.SelectionBehavior.SelectRows
     NoSelection = QTableWidget.SelectionMode.NoSelection
+    Warning = QMessageBox.Icon.Warning
+    RejectRole = QMessageBox.ButtonRole.RejectRole
+    AcceptRole = QMessageBox.ButtonRole.AcceptRole
+    Ok = QMessageBox.StandardButton.Ok
 
 # QT5
 except :
@@ -21,4 +25,8 @@ except :
     WindowStaysOnTopHint = Qt.WindowStaysOnTopHint
     EditTriggers = QTableWidget.NoEditTriggers
     SelectRows = QTableWidget.SelectRows
-    NoSelection = QTableWidget.NoSelection# Checked = Qt.Checked
+    NoSelection = QTableWidget.NoSelection
+    Warning = QMessageBox.Warning
+    RejectRole = QMessageBox.RejectRole
+    AcceptRole = QMessageBox.AcceptRole
+    Ok = QMessageBox.Ok

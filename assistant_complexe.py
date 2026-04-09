@@ -24,7 +24,7 @@
 from qgis.PyQt.QtGui import QColor,QGuiApplication
 from qgis.PyQt.QtWidgets import QTableWidgetItem, QTableWidget, QDialog
 from qgis.PyQt.uic import loadUi
-from qgis.core import Qgis,QgsVectorLayer
+from qgis.core import Qgis,QgsVectorLayer,QgsProject
 from qgis.utils import plugins
 
 from .assistant_complexe_dialog import ComplexeDialog
