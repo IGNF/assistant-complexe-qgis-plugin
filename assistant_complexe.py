@@ -21,16 +21,16 @@
  *                                                                         *
  ***************************************************************************/
 """
-from datetime import datetime
-from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QTableWidgetItem, QTableWidget, QDialog
-from PyQt5.uic import loadUi
-from qgis.core import Qgis
+from qgis.PyQt.QtGui import QColor,QGuiApplication
+from qgis.PyQt.QtWidgets import QTableWidgetItem, QTableWidget, QDialog
+from qgis.PyQt.uic import loadUi
+from qgis.core import Qgis,QgsVectorLayer
+from qgis.utils import plugins
 
 from .assistant_complexe_dialog import ComplexeDialog
 from .fonction import *
 from .constante import *
-from .cheminpluscourt import *
+from .mapping_version import *
 
 class Complexe:
     """QGIS Plugin Implementation."""
@@ -58,27 +58,17 @@ class Complexe:
     def afficheMessageBar(self, message):
         self.iface.messageBar().pushMessage("Info", message, level=Qgis.Info, duration=5)
 
-    def affiche_log(self):
-        afficherlog()
+    def runchepluscourt(self):
+        try:
+            processing_plugin = plugins[PLUGIN_CHE_PLUS_COURT]
+            processing_plugin.run()
+        except KeyError:
+            QMessageBox.warning(None, "Attention",
+                f"Le plugin {PLUGIN_CHE_PLUS_COURT} n'est pas installé ou pas activé\n"
+                f"- Veuillez l'activer dans le menu \"Installer/Gérer les extensions de QGIS\"")
 
     def apropos(self):
         self.dlgAProposDe.show()
-
-    def chemin_court(self):
-        if len(self.selection) != 2:
-            afficheerreur("Veuillez sélectionner 2 tronçons")
-            return
-        self.cheminpluscourt.cheminpluscourt()
-
-        # activation du layer route
-        project = QgsProject.instance()
-        layer = project.mapLayersByName(LAYER_ESPACE_CO[0])
-        self.iface.setActiveLayer(layer[0])
-        self.layer = self.iface.activeLayer()
-
-
-        # zoom sur la selection
-        self.iface.actionZoomToSelected().trigger()
 
     # si une ligne est sélectionnée
     def is_complexe_sel(self):
@@ -100,17 +90,13 @@ class Complexe:
             self.dlg.checkBoxFixer.setChecked(False)
 
     def add_complexe(self):
-        if self.layer.selectedFeatureCount() > 40:
-            afficheerreur("Il n'est pas permis de modifier plus de 40 tronçons par transaction.\nAbandon")
-            return
-
         if not self.dlg.checkBoxFixer.isChecked():
             afficheerreur("Vous devez sélectionner un complexe")
             return
 
         couple = self.get_cleabs_et_lien_route_nommee()
-        # pas de selection
-        # on a fixer le complexe, puis on a tout deselectionné
+        # pas de selection,
+        # on a fixé le complexe, puis on a tout désélectionné
         # puis on a cliqué sur le complexe pour l'ajouter
         if couple[0] == "":
             return
@@ -121,7 +107,7 @@ class Complexe:
         if attr_lien_vers == "":
             attr_lien_vers = attr_cleabs_rte_nommee
 
-        # si le lien n'est pas vide on test s'il existe deja et on concatene
+        # si le lien n'est pas vide, on teste s'il existe deja et on concatène
         if attr_lien_vers != "":
             if attr_cleabs_rte_nommee in attr_lien_vers:
                 pass
@@ -134,9 +120,9 @@ class Complexe:
 
 
     def suppr_complexe(self):
-        if self.layer.selectedFeatureCount() > 40:
-            afficheerreur("Il n'est pas permis de modifier plus de 40 tronçons par transaction.\nAbandon")
-            return
+        # if self.layer.selectedFeatureCount() > 40:
+        #     afficheerreur("Il n'est pas permis de modifier plus de 40 tronçons par transaction.\nAbandon")
+        #     return
 
         if not self.dlg.checkBoxFixer.isChecked():
             afficheerreur("Vous devez sélectionner un complexe")
@@ -209,7 +195,7 @@ class Complexe:
         valeur_sans_NULL = valeur.replace("NULL/","")
 
         self.layer.startEditing()
-        QGuiApplication.setOverrideCursor(Qt.WaitCursor)
+        QGuiApplication.setOverrideCursor(WaitCursor)
 
         for sel in selection:
             attr = sel.attributes()
@@ -360,13 +346,12 @@ class Complexe:
             return
         self.layer = layer1[0]
 
-        # print("actualisersel : ",self.layer.name())
-        nbsel = self.layer.selectedFeatureCount()
-        if nbsel > 40:
-            self.dlg.label_nbselection.setText(f"<span style='color: red'><b>Vous avez "
-                                               f"sélectionné plus de 40 tronçons ({nbsel})</b></span>")
-        else:
-            self.dlg.label_nbselection.setText(f"<span style='color: red'><b>{nbsel}</b></span> entité(s) sélectionnée(s)")
+        # nbsel = self.layer.selectedFeatureCount()
+        # if nbsel > 40:
+        #     self.dlg.label_nbselection.setText(f"<span style='color: red'><b>Vous avez "
+        #                                        f"sélectionné plus de 40 tronçons ({nbsel})</b></span>")
+        # else:
+        #     self.dlg.label_nbselection.setText(f"<span style='color: red'><b>{nbsel}</b></span> entité(s) sélectionnée(s)")
 
         # gestion de la couleur de selection
         couleur = self.dlg.mColorButton.color()
@@ -389,7 +374,7 @@ class Complexe:
 
     def personnaliser_qtablewidget(self):
         # Interdire l'édition des cellules
-        self.dlg.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.dlg.tableWidget.setEditTriggers(NoEditTriggers)
         self.dlg.tableWidget.setColumnCount(4)
         self.dlg.tableWidget.setHorizontalHeaderLabels([LIST_AUTRE_CHAMPS[0], LIST_AUTRE_CHAMPS[1],LIST_AUTRE_CHAMPS[2],LIST_AUTRE_CHAMPS[3]])
         self.dlg.tableWidget.setColumnWidth(0, 120)
@@ -397,16 +382,12 @@ class Complexe:
         self.dlg.tableWidget.setColumnWidth(2, 50)
         self.dlg.tableWidget.setColumnWidth(3, 150)
 
-        self.dlg.tableWidget.setSelectionBehavior(QTableWidget.SelectRows)
-        self.dlg.tableWidget.setSelectionMode(QTableWidget.NoSelection)
+        self.dlg.tableWidget.setSelectionBehavior(SelectRows)
+        self.dlg.tableWidget.setSelectionMode(NoSelection)
         entete = self.dlg.tableWidget.horizontalHeader()
         entete.setStyleSheet("color: #db1515 ;font-weight: bold")
 
     def set_active_layer(self,layer):
-        # project = QgsProject.instance()
-        # layer = project.mapLayersByName(layer)
-        # self.iface.setActiveLayer(layer[0])
-        # self.layer = self.iface.activeLayer()
         project = QgsProject.instance()
         layer = project.mapLayersByName(LAYER_ESPACE_CO[0])
         if not layer:
@@ -416,7 +397,6 @@ class Complexe:
             self.iface.setActiveLayer(layer[0])
             self.layer = self.iface.activeLayer()
             return True
-
 
     def islayer_espaceco(self):
         project = QgsProject.instance()
@@ -442,7 +422,6 @@ class Complexe:
     def unload(self):
         pass
 
-
     def run(self):
         if self.dlg is not None:
             return
@@ -461,8 +440,7 @@ class Complexe:
             self.iface.setActiveLayer(layer[0])
             self.layer = self.iface.activeLayer()
 
-
-        self.dlgAProposDe.setWindowFlags(Qt.WindowStaysOnTopHint)
+        self.dlgAProposDe.setWindowFlags(WindowStaysOnTopHint)
         self.dlgAProposDe.pushButtonAffichedoc.clicked.connect(afficheDoc)
         self.dlgAProposDe.setWindowTitle(f"{TITRE}")
 
@@ -470,10 +448,7 @@ class Complexe:
         self.dlg.mColorButton.setColor(self.iface.mapCanvas().selectionColor())
         self.dlg.mColorButton.colorChanged.connect(self.colorchange)
 
-        # instanciation de la class dhemin le plus court
-        self.cheminpluscourt = cheminpluscourt(self.iface, self.layer)
-
-        # est ce que les layer de l'espace co sont disponibles
+        # est-ce que les layers de l'espace co sont disponibles
         if not self.islayer_espaceco():
             return
 
@@ -487,36 +462,36 @@ class Complexe:
         # personnaliser l'aspect du tablewidget
         self.personnaliser_qtablewidget()
 
-        # evenement clic dans une celulle
+        # événement clic dans une celulle
         self.dlg.tableWidget.cellClicked.connect(self.clic_in_celulle)
 
-        # evenement des boutons
+        # événement des boutons
         self.dlg.pushButtonSelConstituants.clicked.connect(self.getconstituants_complexe)
         self.dlg.pushButtonRetirer.clicked.connect(self.suppr_complexe)
         self.dlg.pushButtonAjouter.clicked.connect(self.add_complexe)
-        self.dlg.pushButtonCheminCourt.clicked.connect(self.chemin_court)
+        self.dlg.pushButtonCheminCourt.clicked.connect(self.runchepluscourt)
+
         self.dlg.pushButtonAPropos.clicked.connect(self.apropos)
         self.dlg.checkBoxFixer.clicked.connect(self.clic_check)
 
-        # peronnalisation des boutons
+        # personnalisation des boutons
         self.dlg.pushButtonSelConstituants.setStyleSheet("background-color: #30b300 ;font-weight: bold")
         self.dlg.pushButtonRetirer.setStyleSheet("background-color: #30b300 ;font-weight: bold")
         self.dlg.pushButtonAjouter.setStyleSheet("background-color: #30b300 ;font-weight: bold")
 
-        # evenement selection change
+        # événement selection change
         self.iface.mapCanvas().selectionChanged.connect(self.actualiserSelection)
         self.actualiserSelection()
 
         # show the dialog
         self.dlg.setParent(self.iface.mainWindow())
-        self.dlg.setWindowFlags(Qt.Dialog | Qt.WindowTitleHint | Qt.WindowCloseButtonHint)
+        self.dlg.setWindowFlags(Dialog | WindowTitleHint | WindowCloseButtonHint)
         self.dlg.show()
 
         self.Add_complexe_in_tablewidget()
 
-
         # Run the dialog event loop
-        result = self.dlg.exec_()
+        result = self.dlg.exec()
 
         if not result:
             # on deconnecte le signal en quittant
