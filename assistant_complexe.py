@@ -314,7 +314,7 @@ class Complexe:
         if all(element == "" or element == "NULL" for element in liste_cleabs):
             return
 
-        # recuperation des attributs de la route nommee corrspondant aux cleabs ci dessus
+        # récuperation des attributs de la route nommee correspondant aux cleabs ci dessus
         # sur le layer route_numerotee_ou_nommee
         project = QgsProject.instance()
         layer = project.mapLayersByName(LAYER_ESPACE_CO[1])
@@ -346,12 +346,8 @@ class Complexe:
             return
         self.layer = layer1[0]
 
-        # nbsel = self.layer.selectedFeatureCount()
-        # if nbsel > 40:
-        #     self.dlg.label_nbselection.setText(f"<span style='color: red'><b>Vous avez "
-        #                                        f"sélectionné plus de 40 tronçons ({nbsel})</b></span>")
-        # else:
-        #     self.dlg.label_nbselection.setText(f"<span style='color: red'><b>{nbsel}</b></span> entité(s) sélectionnée(s)")
+        nbsel = self.layer.selectedFeatureCount()
+        self.dlg.label_nbselection.setText(f"<span style='color: red'><b>{nbsel}</b></span> entité(s) sélectionnée(s)")
 
         # gestion de la couleur de selection
         couleur = self.dlg.mColorButton.color()
