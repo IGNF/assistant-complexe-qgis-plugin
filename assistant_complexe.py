@@ -22,7 +22,7 @@
  ***************************************************************************/
 """
 from qgis.PyQt.QtGui import QColor,QGuiApplication
-from qgis.PyQt.QtWidgets import QTableWidgetItem, QTableWidget, QDialog
+from qgis.PyQt.QtWidgets import QTableWidgetItem, QDialog
 from qgis.PyQt.uic import loadUi
 from qgis.core import Qgis,QgsVectorLayer,QgsProject
 from qgis.utils import plugins
@@ -48,7 +48,7 @@ class Complexe:
         self.dlg = None
         self.cheminpluscourt = None
 
-        # dictionnaire cotenant les liens vers route nommées
+        # dictionnaire contenant les liens vers routes nommés
         self.dico_lien_route_nommee = {}
 
         # declaration et instanciation du QDialog aproposde sans generer de fichier .py correspondant au .ui (donc sans pyuic)
@@ -118,12 +118,7 @@ class Complexe:
         # modification sur la selection
         self.modifier_attribut(LIEN_VERS_RTE_NOMMEE,attr_lien_vers)
 
-
     def suppr_complexe(self):
-        # if self.layer.selectedFeatureCount() > 40:
-        #     afficheerreur("Il n'est pas permis de modifier plus de 40 tronçons par transaction.\nAbandon")
-        #     return
-
         if not self.dlg.checkBoxFixer.isChecked():
             afficheerreur("Vous devez sélectionner un complexe")
             return
@@ -133,20 +128,20 @@ class Complexe:
             return
 
         couple = self.get_cleabs_et_lien_route_nommee()
-        # pas de selection
-        # on a fixer le complexe, puis on a tout deselectionné
+        # pas de selection,
+        # on a fixé le complexe, puis on a tout désélectionné
         # puis on a cliqué sur le complexe pour l'ajouter
         if couple[0] == "":
             return
         attr_cleabs_rte_nommee = couple[0]
         attr_lien_vers = couple[1]
 
-        # si le lien n'est pas vide on test s'il existe deja et on concatene
+        # si le lien n'est pas vide, on teste s'il existe deja et on concatène
         if attr_lien_vers != "":
             # le lien vert_rout n'est pas vide ET contient la cleabs à enlever
             if attr_cleabs_rte_nommee in attr_lien_vers:
                 attr_lien_vers = attr_lien_vers.replace(attr_cleabs_rte_nommee,"")
-                # si la cleabs etait en premier ou en dernier
+                # si la cleabs était en premier ou en dernier
                 # il reste "/" en debut de chaine ou en fin de chaine , à supprimer
                 if attr_lien_vers != "":
                     if attr_lien_vers[0] == "/":
@@ -154,11 +149,10 @@ class Complexe:
                     # test si "/" en fin de chaine, a supprimer
                     if attr_lien_vers[-1] == "/":
                         attr_lien_vers = attr_lien_vers[:-1]
-                    # si la chaine etait au milieu il y a un double "/" , 1 a supprimer (sans test)
+                    # si la chaine était au milieu, il y a un double "/", 1 à supprimer (sans test).
                     attr_lien_vers = attr_lien_vers.replace("//","/")
-
             else:
-                # lien_vers_rout... n'est pas vide mais ne contient pas la cleabs à supprimer
+                # lien_vers_rout... n'est pas vide, mais ne contient pas la cleabs à supprimer
                 pass
 
         # modification sur la selection
@@ -170,9 +164,9 @@ class Complexe:
         complexe = list_complexes[self.ligne_selectionne]
         attr_cleabs_rte_nommee = complexe
 
-        # on recupere les attributs du champs lien vers roite nommee...
-        # pour ajouter ou concatener avec le caractere "/"
-        # a faire : on peut selectionner plusieurs troncons
+        # On récupère les attributs des champs lien vers route nommee...
+        # Pour ajouter ou concaténer avec le caractere "/"
+        # à faire : on peut sélectionner plusieurs tronçons
         self.set_active_layer(LAYER_ESPACE_CO[0])
         list_sel_layer_rte = self.layer.selectedFeatures()
         if len(list_sel_layer_rte) == 0:
@@ -190,8 +184,8 @@ class Complexe:
         self.layer = self.iface.activeLayer()
         selection = self.layer.selectedFeatures()
 
-        # remplacer les occurences de "NULL" en "" sur la variable valeur.
-        # sinon plantage du modele
+        # Remplacer les occurences de "NULL" en "" sur la variable valeur.
+        # Sinon plantage du modèle
         valeur_sans_NULL = valeur.replace("NULL/","")
 
         self.layer.startEditing()
@@ -204,7 +198,6 @@ class Complexe:
             if attr[idlienvers] != valeur_sans_NULL:
                 self.layer.changeAttributeValue(sel.id(), idchamps,valeur_sans_NULL)
 
-
         self.dlg.pushButtonSelConstituants.setEnabled(True)
         QGuiApplication.restoreOverrideCursor()
         self.afficheMessageBar(
@@ -214,21 +207,19 @@ class Complexe:
     # par le bouton : pushButtonSelConstituants
     def getconstituants_complexe(self):
         # astuce : depuis python 3.7 les dictionnaires restent ordonnés suivant l'ordre d'insertion
-        # -> convertir le dictionnaire en list et on accéde a l'element qui correspond à la ligne du
-        # tablewidget
+        # → convertir le dictionnaire en list et on accède à l'élément qui correspond à la ligne du
+        # tablewidget,
         # je ne fais pas : list(self.dico_lien_route_nommee.items()
-        # pas besoin, je veux juste les clées --> cleabs
+        # pas besoin, je veux juste les clées → cleabs
 
         if not self.dlg.checkBoxFixer.isChecked():
             afficheerreur("Vous devez sélectionner un complexe")
             return
 
-
-
         list_complexes = list(self.dico_lien_route_nommee)
         complexe = list_complexes[self.ligne_selectionne]
 
-        # il faut sélectionner les troncon sur la couche route dont lien_vers..
+        # Il faut sélectionner les troncon sur la couche route dont lien_vers...
         # contient la cleabs de la route nommee du dictionnaire
         expr = f"{LIEN_VERS_RTE_NOMMEE} LIKE '%{complexe}%'"
 
@@ -238,9 +229,6 @@ class Complexe:
 
     # rempli la tablewidget avec la liste des complexes du troncon
     def Add_complexe_in_tablewidget(self):
-        if self.layer.selectedFeatureCount() != 1:
-            return
-
         if len(self.dico_lien_route_nommee) == 0:
             self.dlg.pushButtonRetirer.setEnabled(False)
             self.dlg.pushButtonAjouter.setEnabled(False)
@@ -257,16 +245,16 @@ class Complexe:
             self.dlg.tableWidget.setItem(compt, 0, QTableWidgetItem(attribut[0]))
             self.dlg.tableWidget.setItem(compt, 1, QTableWidgetItem(attribut[1]))
             self.dlg.tableWidget.setItem(compt, 2, QTableWidgetItem(attribut[2]))
-            # si le nom est NULL ou "" on affiche rien, sinon plantage du tablewidget
+            # si le nom est NULL ou "" on n'affiche rien, sinon plantage du tablewidget
             try:
                 self.dlg.tableWidget.setItem(compt, 3, QTableWidgetItem(attribut[3]))
             except TypeError:
                 pass
-            # taille des lignes (on peut pas plus petit que le contenant
+            # taille des lignes (on ne peut pas plus petit que le contenant
             self.dlg.tableWidget.setRowHeight(compt, 1)
             compt +=1
 
-        # mettre toute sles ligne en blanc
+        # mettre toutes les lignes en blanc
         self.init_couleur_cellule(len(self.dico_lien_route_nommee))
 
     def clic_in_celulle(self,ligne):
@@ -289,7 +277,7 @@ class Complexe:
             for colonne in range(0,len(LIST_AUTRE_CHAMPS)):
                 item = self.dlg.tableWidget.item(ligne, colonne)
                 # # item = self.dlg.tableWidget.item(1, 1)
-                # initvouleur est appelé aussi avant l'affichage du dial, donc try pour le cas là
+                # init_couleur est appelé aussi avant l'affichage du dial, donc try pour le cas là
                 try:
                     item.setBackground(QColor(220, 220, 220))
                 except AttributeError:
@@ -298,17 +286,21 @@ class Complexe:
     def set_dico_lien_route_nommee(self):
         self.dico_lien_route_nommee.clear()
         # si nb selection different de 1 on fait rien
-        if len(self.selection) != 1:
+        if len(self.selection) == 0:
             self.dlg.tableWidget.setRowCount(0)
             return
-        # recuperation des cleabs du champs lien vers route nommee
-        fields = self.layer.fields()
-        liste_cleabs = []
-        for field in fields:
-            field_value = self.selection[0][field.name()]
 
-            if field.name() == LIEN_VERS_RTE_NOMMEE:
-                liste_cleabs = field_value.split("/")
+        liste_cleabs = set()  # pas de doublons
+        # recuperation des cleabs du champs lien vers route nommee
+        for sel in self.selection:
+            val = str(sel[LIEN_VERS_RTE_NOMMEE]).strip()
+            # print(f"field.name() : {field.name()} - field_value : {field_value} ")
+            if val not in ("", "NULL"):
+                cleabs_list = val.split("/")
+                for cleabs in cleabs_list:
+                    cleabs = cleabs.strip()
+                    if cleabs and cleabs != "NULL":
+                        liste_cleabs.add(cleabs)
 
         # si la liste contient que des element vide ou "NULL
         if all(element == "" or element == "NULL" for element in liste_cleabs):
