@@ -21,6 +21,8 @@
  *                                                                         *
  ***************************************************************************/
 """
+import os
+
 from qgis.PyQt.QtGui import QColor,QGuiApplication
 from qgis.PyQt.QtWidgets import QTableWidgetItem, QDialog
 from qgis.PyQt.uic import loadUi
