@@ -7,15 +7,16 @@ name=IGN Assistant complexe
 qgisMinimumVersion=3.0
 qgisMaximumVersion=4.99
 description=Assistant complexe
-version=1.3.0
+version=1.3.0_recette
 author=Gérôme PECHEUR (IGN)
 email=gerome.pecheur@ign.fr
 license=GNU AGPL v3
 
 about=Assistant complexe
 
-tracker=http://bugs
-repository=http://repo
+homepage=https://ignf.github.io/assistant-complexe-qgis-plugin/
+tracker=https://github.com/IGNF/assistant-complexe-qgis-plugin/issues
+repository=https://github.com/IGNF/assistant-complexe-qgis-plugin
 # End of mandatory metadata
 
 # Recommended items:
@@ -27,7 +28,6 @@ hasProcessingProvider=no
 # Tags are comma separated with spaces allowed
 tags=python
 
-homepage=http://homepage
 category=Plugins
 icon=icons/icon_principal.png
 # experimental flag

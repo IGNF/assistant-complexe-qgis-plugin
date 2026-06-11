@@ -1,9 +1,9 @@
-import os.path
+import webbrowser
+
 from qgis.core import QgsFeatureRequest,QgsExpression
 
 from .constante import *
 from .mapping_version import *
-import subprocess
 
 def modif_attribut_byid(layer,liste,champs,nouveau):
     # liste = selection : selectedFeatures()
@@ -18,11 +18,7 @@ def modif_champs(layer,champs,valeur, champs_a_modifier,new_valeur):
         layer.changeAttributeValue(entite.id(), layer.fields().indexOf(champs_a_modifier), new_valeur)
 
 def afficheDoc():
-    fichier = os.path.join(os.path.dirname(__file__), "assistant complexe.pdf")
-    if not os.path.isfile(fichier):
-        afficheerreur("La documentation est introuvable", "Information")
-    else:
-        subprocess.Popen(['start', '', fichier], shell=True)
+    webbrowser.open("https://ignf.github.io/assistant-complexe-qgis-plugin/")
 
 def afficheerreur(text, titre=TITRE):
     msg = QMessageBox()

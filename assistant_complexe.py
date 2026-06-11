@@ -21,6 +21,8 @@
  *                                                                         *
  ***************************************************************************/
 """
+import os
+
 from qgis.PyQt.QtGui import QColor,QGuiApplication
 from qgis.PyQt.QtWidgets import QTableWidgetItem, QDialog
 from qgis.PyQt.uic import loadUi
@@ -46,7 +48,6 @@ class Complexe:
         self.selection = None
 
         self.dlg = None
-        self.cheminpluscourt = None
 
         # dictionnaire contenant les liens vers routes nommés
         self.dico_lien_route_nommee = {}
@@ -242,12 +243,12 @@ class Complexe:
 
         compt = 0
         for cle,attribut in self.dico_lien_route_nommee.items():
-            self.dlg.tableWidget.setItem(compt, 0, QTableWidgetItem(attribut[0]))
-            self.dlg.tableWidget.setItem(compt, 1, QTableWidgetItem(attribut[1]))
-            self.dlg.tableWidget.setItem(compt, 2, QTableWidgetItem(attribut[2]))
+            self.dlg.tableWidget.setItem(compt, 0, QTableWidgetItem(str(attribut[0])))
+            self.dlg.tableWidget.setItem(compt, 1, QTableWidgetItem(str(attribut[1])))
+            self.dlg.tableWidget.setItem(compt, 2, QTableWidgetItem(str(attribut[2])))
             # si le nom est NULL ou "" on n'affiche rien, sinon plantage du tablewidget
             try:
-                self.dlg.tableWidget.setItem(compt, 3, QTableWidgetItem(attribut[3]))
+                self.dlg.tableWidget.setItem(compt, 3, QTableWidgetItem(str(attribut[3])))
             except TypeError:
                 pass
             # taille des lignes (on ne peut pas plus petit que le contenant
