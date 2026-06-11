@@ -1,3 +1,4 @@
+
 <table>
 <colgroup>
 <col style="width: 21%" />
@@ -8,53 +9,44 @@
 <td rowspan="2"><img src="images/image1.jpeg"
 style="width:1.38681in;height:1.47153in"
 alt="logo_IGN_pour_lettre" /></td>
-<td style="text-align: center;"><strong>Manuel utilisateur du plugin
-« assistant complexe »</strong></td>
+<td style="font-size: 24px;text-align: center;"><p><strong>Manuel utilisateur du plugin
+« Assistant complexe »</strong></p>
+<p><strong>V1.3.1</strong></p></td>
 </tr>
 <tr>
-<td style="text-align: center;"></td>
+<td style="font-size: 16px;text-align: center;">Développeur  : Gérôme PECHEUR (IGN)</td>
 </tr>
 </tbody>
 </table>
 
-| Version | Date | Modifié par | Historique des modifications |
-|----|----|----|:--:|
-|  |  |  |  |
-| 1.0.0 | 07/07/2025 | Gérôme PECHEUR | Première version diffusée |
-| 1.1.0 | 22/07/2025 | Philippe GALLEN | Transaction par le plugin Espace Collaboratif |
-| 1.1.1 | 21/01/2026 | Philippe GALLEN | Adaptation à la version 1.1.1 |
-| 1.2.1 | 09/04/2026 | Gérôme PECHEUR | Adaptation à la version 1.2.1 |
-| 1.3.0 | 15/04/2026 | Gérôme PECHEUR | Adaptation à la version 1.3.0 |
+## Sommaire
 
-**Sommaire**
+- [1. Prérequis](#prerequis)
 
-[1 Prérequis](#prérequis)
+- [2. Résumé](#resume)
 
-[2 Résumé](#résumé)
+- [3. Installation](#installation)
 
-[3 Installation](#installation)
+- [4. Présentation](#presentation)
 
-[4 Présentation](#présentation)
+- [5. Mode de sélection](#mode-de-sélection)
 
-[5 Mode de sélection](#mode-de-sélection)
+	- [5.1 Sélection unique](#selection-unique)
 
-[5.1 Sélection unique](#sélection-unique)
+	- [5.2 Sélection multiple](#selection-multiple)
 
-[5.2 Sélection multiple](#sélection-multiple)
+- [6. Modifications d’un complexe](#modifications-dun-complexe)
 
-[6 Modifications d’un complexe](#modifications-dun-complexe)
+- [7. A propos de](#a-propos-de)
 
-[7 Extras](#extras)
+	
 
-[7.1 A propos de](#a-propos-de)
 
-[8 Annexes](#annexes)
 
-[8.1 Package openpyxl](#package-openpyxl)
 
-# 
-
-# Prérequis
+<div  style="background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
+  <h2 id="prerequis" style="color: white;margin:0;" >1. Prérequis</h2>
+</div>
 
 - Version de QGIS : 3.28 ou supérieur
 
@@ -68,12 +60,14 @@ alt="logo_IGN_pour_lettre" /></td>
 - Package openpyxl (voir installation en annexe à la fin de ce
   document).
 
-- Le plugin « maitre » doit préalablement être installé
+- Le plugin « maitre » doit préalablement être installé : 
+[maitre-qgis-plugin sur GitHub](https://github.com/IGNF/maitre-qgis-plugin/releases/download/version_finale/plugin_maitre.zip)
 
-- Le plugin « chemin le plus court » doit aussi être installé pour
-  utiliser ses fonctionnalités.
+- Le plugin « chemin le plus court » doit aussi être installé pour utiliser ses fonctionnalités : [chemin-le-plus-court-qgis-plugin sur GitHub](https://github.com/IGNF/chemin-le-plus-court-qgis-plugin/releases/download/version_finale/IGN_chemin_le_plus_court.zip)
 
-# Résumé
+<div  style="background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
+  <h2 id="resume" style="color: white;margin:0;" >2. Résumé</h2>
+</div>
 
 Rappel des spécifications de la BDTopo :
 
@@ -94,8 +88,9 @@ Ce plugin facilite la gestion de ce lien et permet d’ajouter, de retirer
 un ou plusieurs tronçons de ces routes numérotées ou nommées et de
 sélectionner tous les tronçons qui les composent.
 
-# Installation
-
+<div  style="background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
+  <h2 id="installation" style="color: white;margin:0;" >3. Installation</h2>
+</div>
 Ouvrir QGIS.
 
 Allez dans Extensions/Installer/Gérer les extensions, cliquez sur
@@ -105,7 +100,9 @@ Installer le plugin.
 <img src="images/image2.png"
 style="width:6.83889in;height:1.525in" />
 
-# Présentation
+<div  style="background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
+  <h2 id="presentation" style="color: white;margin:0;" >4. Présentation</h2>
+</div>
 
 <img src="images/image3.png"
 style="width:4.83401in;height:2.10446in" />
@@ -143,18 +140,27 @@ Le bouton <img src="images/image10.PNG"
 style="width:1.03125in;height:0.2145in" /> permet de sélectionner tous
 les tronçons compris entre 2 tronçons
 
-# Mode de sélection
+<div  style="background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
+  <h2 id="mode-de-sélection" style="color: white;margin:0;" >5. Mode de sélection</h2>
+</div>
 
 L’interface permet de modifier la couleur de la sélection des tronçons
 dans QGIS, en fonction de la symbologie des tronçons il peut être
 judicieux d’en modifier la couleur
 
-## Sélection unique
+
+
+<div  style="font-size: 10px;background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
+  <h2 id="selection-unique" style="color: white;margin:0;" >5.1 Sélection unique</h2>
+</div>
 
 - Sélection unique, on ne sélectionne qu’un seul tronçon avec l’outil de
   sélection de QGIS
 
-## Sélection multiple
+
+<div  style="font-size: 10px;background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
+  <h2 id="selection-multiple" style="color: white;margin:0;" >5.2 Sélection multiple</h2>
+</div>
 
 - Sélection multiple avec l’outil de saisi. Dans QGIS on peut
   sélectionner manuellement un ensemble de tronçons
@@ -169,7 +175,9 @@ judicieux d’en modifier la couleur
   contrôle visuel est toutefois nécessaire afin de vérifier si les
   tronçons sont bien ceux désirés.
 
-# Modifications d’un complexe
+<div  style="background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
+  <h2 id="modifications-dun-complexe" style="color: white;margin:0;" >6. Modifications d’un complexe</h2>
+</div>
 
 - Lors de la sélection d’un tronçon de route, l’interface affiche la
   liste des complexes associés s’ils sont dans l’emprise du projet.
@@ -185,7 +193,7 @@ judicieux d’en modifier la couleur
 
 - Le complexe étant fixé on peut :
 
-<!-- -->
+
 
 - Sélectionner les constituants avec : <img src="images/image6.PNG"
   style="width:1.30208in;height:0.16472in" />
@@ -198,7 +206,6 @@ judicieux d’en modifier la couleur
   <img src="images/image5.PNG"
   style="width:0.86458in;height:0.15601in" />
 
-<!-- -->
 
 - <span class="mark">Les modifications faites avec l’outil ne seront
   effectives (objets modifiés sur le serveur) que lorsqu’on enregistrera
@@ -206,9 +213,10 @@ judicieux d’en modifier la couleur
   <img src="images/image12.png"
   style="width:0.88041in;height:0.35216in" />
 
-# Extras
+<div  style="background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
+  <h2 id="a-propos-de" style="color: white;margin:0;" >7. A propos de</h2>
+</div>
 
-## A propos de
 
 Accessible via <img src="images/image13.PNG"
 style="width:0.23962in;height:0.25003in" />.
@@ -219,29 +227,4 @@ style="width:3.50396in;height:4.30844in" />
 Cette boite permet de suivre l’évolution des différentes versions ainsi
 que d’afficher cette documentation.
 
-# Annexes
 
-## Package openpyxl
-
-Si le package « openpyxl » n’est pas installé sur le poste le message
-d’erreur ci-dessous apparait lors d’une transaction.
-
-<img src="images/image15.PNG"
-style="width:6.83889in;height:2.09306in" />
-
-Remède : installation du package.
-
-Ouvrir l’invite de commande, se placer dans le répertoire « bin » de
-l’installation de QGIS :
-
-Exemple :
-
-<img src="images/image16.PNG"
-style="width:5.76122in;height:1.72941in" />
-
-Puis taper la commande : python-qgis-ltr.bat -m pip install openpyxl
-
-<img src="images/image17.PNG"
-style="width:6.83889in;height:1.54097in" />
-
-Le package s’installe, vous n’avez plus qu’à relancer QGIS.
