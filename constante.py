@@ -1,7 +1,7 @@
 
 TITRE = "Assistant complexe"
 
-PLUGIN_CHE_PLUS_COURT = "IGN_chemin_le_plus_court"
+PLUGIN_CHE_PLUS_COURT = "IGN_ShortestPath"
 
 LAYER_ESPACE_CO = ["troncon_de_route","route_numerotee_ou_nommee"]
 
