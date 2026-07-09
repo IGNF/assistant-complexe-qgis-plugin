@@ -11,7 +11,7 @@ style="width:1.38681in;height:1.47153in"
 alt="logo_IGN_pour_lettre" /></td>
 <td style="font-size: 24px;text-align: center;"><p><strong>Manuel utilisateur du plugin
 « Assistant complexe »</strong></p>
-<p><strong>V1.3.1</strong></p></td>
+<p><strong>V1.3.2</strong></p></td>
 </tr>
 <tr>
 <td style="font-size: 16px;text-align: center;">Développeur  : Gérôme PECHEUR (IGN)</td>
@@ -60,10 +60,11 @@ alt="logo_IGN_pour_lettre" /></td>
 - Package openpyxl (voir installation en annexe à la fin de ce
   document).
 
-- Le plugin « maitre » doit préalablement être installé : 
-[maitre-qgis-plugin sur GitHub](https://github.com/IGNF/maitre-qgis-plugin/releases/download/version_finale/plugin_maitre.zip)
+- Le plugin « PluginsManager » doit préalablement être installé : 
+[PluginsManager-qgis-plugin sur GitHub](https://github.com/IGNF/maitre-qgis-plugin/releases/download/version_finale/PluginsManager.zip)
 
-- Le plugin « chemin le plus court » doit aussi être installé pour utiliser ses fonctionnalités : [chemin-le-plus-court-qgis-plugin sur GitHub](https://github.com/IGNF/chemin-le-plus-court-qgis-plugin/releases/download/version_finale/IGN_chemin_le_plus_court.zip)
+- Le fonctionnement de certaines fonctionnalités nécessite l’installation de :
+[ShortestPath-qgis-plugin sur GitHub](https://github.com/IGNF/ShortestPath-qgis-plugin/releases/download/version_finale/IGN_ShortestPath.zip)  
 
 <div  style="background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
   <h2 id="resume" style="color: white;margin:0;" >2. Résumé</h2>

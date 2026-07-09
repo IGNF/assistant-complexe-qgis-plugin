@@ -26,13 +26,12 @@ import os
 from qgis.PyQt.QtGui import QColor,QGuiApplication
 from qgis.PyQt.QtWidgets import QTableWidgetItem, QDialog
 from qgis.PyQt.uic import loadUi
-from qgis.core import Qgis,QgsVectorLayer,QgsProject
+from qgis.core import Qgis,QgsVectorLayer,QgsProject,QgsApplication
 from qgis.utils import plugins
 
 from .assistant_complexe_dialog import ComplexeDialog
 from .fonction import *
-from .constante import *
-from .mapping_version import *
+from .window_manager import *
 
 class Complexe:
     """QGIS Plugin Implementation."""
@@ -406,10 +405,29 @@ class Complexe:
         self.actualiserSelection()
 
     def initGui(self):
-        pass
+        self.iface.projectRead.connect(self.on_project_opened)
+        # événement fermeture de qgis
+        QgsApplication.instance().aboutToQuit.connect(self.fermeture_qgis)
 
     def unload(self):
         pass
+
+    def on_project_opened(self):
+        settings = QSettings(NativeFormat, UserScope, "IGN", TITRE)
+        visible = settings.value("visible", False, type=bool)
+        if visible:
+            self.run()
+
+    def on_dialog_closed(self):
+        try:
+            self.iface.mapCanvas().selectionChanged.disconnect(self.actualiserSelection)
+        except TypeError:
+            pass  # aucune connexion existante
+        sauve_position_dial(self.dlg)
+        self.dlg = None
+
+    def fermeture_qgis(self):
+        sauve_position_dial(self.dlg)
 
     def run(self):
         if self.dlg is not None:
@@ -417,6 +435,10 @@ class Complexe:
 
         self.dlg = ComplexeDialog()
         self.dlg.setWindowTitle(f"{TITRE}")
+
+        # connection de la fermeture du dialogue
+        self.dlg.finished.connect(self.on_dialog_closed)
+        restore_position_dial(self.dlg)
 
         # self.layer = self.iface.activeLayer()
         # TODO a verifier
@@ -479,15 +501,15 @@ class Complexe:
 
         self.Add_complexe_in_tablewidget()
 
-        # Run the dialog event loop
-        result = self.dlg.exec()
-
-        if not result:
-            # on deconnecte le signal en quittant
-            try:
-                self.iface.mapCanvas().selectionChanged.disconnect(self.actualiserSelection)
-            except TypeError:
-                pass  # aucune connexion existante
-
-            # on réinitialise pour gere le rechargement si une seule instance
-            self.dlg = None
+        # # Run the dialog event loop
+        # result = self.dlg.exec()
+        #
+        # if not result:
+        #     # on deconnecte le signal en quittant
+        #     try:
+        #         self.iface.mapCanvas().selectionChanged.disconnect(self.actualiserSelection)
+        #     except TypeError:
+        #         pass  # aucune connexion existante
+        #
+        #     # on réinitialise pour gere le rechargement si une seule instance
+        #     self.dlg = None
