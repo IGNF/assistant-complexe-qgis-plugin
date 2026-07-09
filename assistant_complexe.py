@@ -175,6 +175,12 @@ class Complexe:
         attr = list_sel_layer_rte[0].attributes()
         attr_lien_vers = attr[idchamps]
 
+        # gestion des QVariant, si le champ est vide, on met une chaine vide, sinon on convertit en str
+        if not attr_lien_vers:
+            attr_lien_vers = ""
+        else:
+            attr_lien_vers = str(attr_lien_vers)
+
         return attr_cleabs_rte_nommee,attr_lien_vers
 
     def modifier_attribut(self,champs,valeur):
@@ -294,7 +300,6 @@ class Complexe:
         # recuperation des cleabs du champs lien vers route nommee
         for sel in self.selection:
             val = str(sel[LIEN_VERS_RTE_NOMMEE]).strip()
-            # print(f"field.name() : {field.name()} - field_value : {field_value} ")
             if val not in ("", "NULL"):
                 cleabs_list = val.split("/")
                 for cleabs in cleabs_list:
