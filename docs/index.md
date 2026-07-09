@@ -133,12 +133,10 @@ Le bouton <img src="images/image8.png"
 style="width:0.21522in;height:0.22291in" /> permet d’afficher le suivi
 des versions et permet également d’ouvrir la documentation du plugin
 
-Le bouton <img src="images/image9.png"
-style="width:0.78125in;height:0.40625in" /> permet de modifier la
+Le bouton <img src="images/image9.png"/> permet de modifier la
 couleur de la sélection
 
-Le bouton <img src="images/image10.PNG"
-style="width:1.03125in;height:0.2145in" /> permet de sélectionner tous
+Le bouton <img src="images/image10.PNG"/> permet de sélectionner tous
 les tronçons compris entre 2 tronçons
 
 <div  style="background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
@@ -169,8 +167,7 @@ judicieux d’en modifier la couleur
 - Sélection multiple de tronçons contigües, on sélectionne
   <span class="mark">2 tronçons visibles à l’écran et connectés</span>
   par un réseau de tronçons. Ensuite en clique sur
-  <img src="images/image10.PNG"
-  style="width:0.90144in;height:0.1875in" />, le résultat est une
+  <img src="images/image10.PNG"/>, le résultat est une
   sélection de tous les tronçons entre le premier et le deuxième
   sélectionnés respectant l’algorithme du chemin le plus court. Un
   contrôle visuel est toutefois nécessaire afin de vérifier si les

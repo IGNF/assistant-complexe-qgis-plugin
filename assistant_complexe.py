@@ -68,7 +68,7 @@ class Complexe:
                 f"- Veuillez l'activer dans le menu \"Installer/Gérer les extensions de QGIS\"")
 
     def apropos(self):
-        self.dlgAProposDe.show()
+        self.dlgAProposDe.exec()
 
     # si une ligne est sélectionnée
     def is_complexe_sel(self):
@@ -345,6 +345,12 @@ class Complexe:
 
         nbsel = self.layer.selectedFeatureCount()
         self.dlg.label_nbselection.setText(f"<span style='color: red'><b>{nbsel}</b></span> entité(s) sélectionnée(s)")
+
+        if nbsel != 2:
+            # on masque les boutons si on a pas 2 sélections
+            self.dlg.pushButtonCheminCourt.setEnabled(False)
+        else:
+            self.dlg.pushButtonCheminCourt.setEnabled(True)
 
         # gestion de la couleur de selection
         couleur = self.dlg.mColorButton.color()
