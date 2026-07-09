@@ -26,13 +26,12 @@ import os
 from qgis.PyQt.QtGui import QColor,QGuiApplication
 from qgis.PyQt.QtWidgets import QTableWidgetItem, QDialog
 from qgis.PyQt.uic import loadUi
-from qgis.core import Qgis,QgsVectorLayer,QgsProject
+from qgis.core import Qgis,QgsVectorLayer,QgsProject,QgsApplication
 from qgis.utils import plugins
 
 from .assistant_complexe_dialog import ComplexeDialog
 from .fonction import *
-from .constante import *
-from .mapping_version import *
+from .window_manager import *
 
 class Complexe:
     """QGIS Plugin Implementation."""
@@ -69,7 +68,7 @@ class Complexe:
                 f"- Veuillez l'activer dans le menu \"Installer/Gérer les extensions de QGIS\"")
 
     def apropos(self):
-        self.dlgAProposDe.show()
+        self.dlgAProposDe.exec()
 
     # si une ligne est sélectionnée
     def is_complexe_sel(self):
@@ -175,6 +174,12 @@ class Complexe:
         idchamps = self.layer.fields().indexFromName(LIEN_VERS_RTE_NOMMEE)
         attr = list_sel_layer_rte[0].attributes()
         attr_lien_vers = attr[idchamps]
+
+        # gestion des QVariant, si le champ est vide, on met une chaine vide, sinon on convertit en str
+        if not attr_lien_vers:
+            attr_lien_vers = ""
+        else:
+            attr_lien_vers = str(attr_lien_vers)
 
         return attr_cleabs_rte_nommee,attr_lien_vers
 
@@ -295,7 +300,6 @@ class Complexe:
         # recuperation des cleabs du champs lien vers route nommee
         for sel in self.selection:
             val = str(sel[LIEN_VERS_RTE_NOMMEE]).strip()
-            # print(f"field.name() : {field.name()} - field_value : {field_value} ")
             if val not in ("", "NULL"):
                 cleabs_list = val.split("/")
                 for cleabs in cleabs_list:
@@ -341,6 +345,12 @@ class Complexe:
 
         nbsel = self.layer.selectedFeatureCount()
         self.dlg.label_nbselection.setText(f"<span style='color: red'><b>{nbsel}</b></span> entité(s) sélectionnée(s)")
+
+        if nbsel != 2:
+            # on masque les boutons si on a pas 2 sélections
+            self.dlg.pushButtonCheminCourt.setEnabled(False)
+        else:
+            self.dlg.pushButtonCheminCourt.setEnabled(True)
 
         # gestion de la couleur de selection
         couleur = self.dlg.mColorButton.color()
@@ -406,10 +416,29 @@ class Complexe:
         self.actualiserSelection()
 
     def initGui(self):
-        pass
+        self.iface.projectRead.connect(self.on_project_opened)
+        # événement fermeture de qgis
+        QgsApplication.instance().aboutToQuit.connect(self.fermeture_qgis)
 
     def unload(self):
         pass
+
+    def on_project_opened(self):
+        settings = QSettings(NativeFormat, UserScope, "IGN", TITRE)
+        visible = settings.value("visible", False, type=bool)
+        if visible:
+            self.run()
+
+    def on_dialog_closed(self):
+        try:
+            self.iface.mapCanvas().selectionChanged.disconnect(self.actualiserSelection)
+        except TypeError:
+            pass  # aucune connexion existante
+        sauve_position_dial(self.dlg)
+        self.dlg = None
+
+    def fermeture_qgis(self):
+        sauve_position_dial(self.dlg)
 
     def run(self):
         if self.dlg is not None:
@@ -417,6 +446,10 @@ class Complexe:
 
         self.dlg = ComplexeDialog()
         self.dlg.setWindowTitle(f"{TITRE}")
+
+        # connection de la fermeture du dialogue
+        self.dlg.finished.connect(self.on_dialog_closed)
+        restore_position_dial(self.dlg)
 
         # self.layer = self.iface.activeLayer()
         # TODO a verifier
@@ -479,15 +512,15 @@ class Complexe:
 
         self.Add_complexe_in_tablewidget()
 
-        # Run the dialog event loop
-        result = self.dlg.exec()
-
-        if not result:
-            # on deconnecte le signal en quittant
-            try:
-                self.iface.mapCanvas().selectionChanged.disconnect(self.actualiserSelection)
-            except TypeError:
-                pass  # aucune connexion existante
-
-            # on réinitialise pour gere le rechargement si une seule instance
-            self.dlg = None
+        # # Run the dialog event loop
+        # result = self.dlg.exec()
+        #
+        # if not result:
+        #     # on deconnecte le signal en quittant
+        #     try:
+        #         self.iface.mapCanvas().selectionChanged.disconnect(self.actualiserSelection)
+        #     except TypeError:
+        #         pass  # aucune connexion existante
+        #
+        #     # on réinitialise pour gere le rechargement si une seule instance
+        #     self.dlg = None

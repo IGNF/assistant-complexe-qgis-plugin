@@ -11,7 +11,7 @@ style="width:1.38681in;height:1.47153in"
 alt="logo_IGN_pour_lettre" /></td>
 <td style="font-size: 24px;text-align: center;"><p><strong>Manuel utilisateur du plugin
 « Assistant complexe »</strong></p>
-<p><strong>V1.3.1</strong></p></td>
+<p><strong>V1.3.2</strong></p></td>
 </tr>
 <tr>
 <td style="font-size: 16px;text-align: center;">Développeur  : Gérôme PECHEUR (IGN)</td>
@@ -60,10 +60,11 @@ alt="logo_IGN_pour_lettre" /></td>
 - Package openpyxl (voir installation en annexe à la fin de ce
   document).
 
-- Le plugin « maitre » doit préalablement être installé : 
-[maitre-qgis-plugin sur GitHub](https://github.com/IGNF/maitre-qgis-plugin/releases/download/version_finale/plugin_maitre.zip)
+- Le plugin « PluginsManager » doit préalablement être installé : 
+[PluginsManager-qgis-plugin sur GitHub](https://github.com/IGNF/maitre-qgis-plugin/releases/download/version_finale/PluginsManager.zip)
 
-- Le plugin « chemin le plus court » doit aussi être installé pour utiliser ses fonctionnalités : [chemin-le-plus-court-qgis-plugin sur GitHub](https://github.com/IGNF/chemin-le-plus-court-qgis-plugin/releases/download/version_finale/IGN_chemin_le_plus_court.zip)
+- Le fonctionnement de certaines fonctionnalités nécessite l’installation de :
+[ShortestPath-qgis-plugin sur GitHub](https://github.com/IGNF/ShortestPath-qgis-plugin/releases/download/version_finale/IGN_ShortestPath.zip)  
 
 <div  style="background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
   <h2 id="resume" style="color: white;margin:0;" >2. Résumé</h2>
@@ -132,12 +133,10 @@ Le bouton <img src="images/image8.png"
 style="width:0.21522in;height:0.22291in" /> permet d’afficher le suivi
 des versions et permet également d’ouvrir la documentation du plugin
 
-Le bouton <img src="images/image9.png"
-style="width:0.78125in;height:0.40625in" /> permet de modifier la
+Le bouton <img src="images/image9.png"/> permet de modifier la
 couleur de la sélection
 
-Le bouton <img src="images/image10.PNG"
-style="width:1.03125in;height:0.2145in" /> permet de sélectionner tous
+Le bouton <img src="images/image10.PNG"/> permet de sélectionner tous
 les tronçons compris entre 2 tronçons
 
 <div  style="background-color: #00ADC5; border: 1px solid black; padding: 5px; text-align: justify;margin-bottom:10px;">
@@ -168,8 +167,7 @@ judicieux d’en modifier la couleur
 - Sélection multiple de tronçons contigües, on sélectionne
   <span class="mark">2 tronçons visibles à l’écran et connectés</span>
   par un réseau de tronçons. Ensuite en clique sur
-  <img src="images/image10.PNG"
-  style="width:0.90144in;height:0.1875in" />, le résultat est une
+  <img src="images/image10.PNG"/>, le résultat est une
   sélection de tous les tronçons entre le premier et le deuxième
   sélectionnés respectant l’algorithme du chemin le plus court. Un
   contrôle visuel est toutefois nécessaire afin de vérifier si les

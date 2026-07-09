@@ -1,4 +1,4 @@
-from qgis.PyQt.QtCore import Qt
+from qgis.PyQt.QtCore import Qt,QSettings
 from qgis.PyQt.QtWidgets import QTableWidget,QMessageBox
 
 # QT6
@@ -15,6 +15,8 @@ try :
     RejectRole = QMessageBox.ButtonRole.RejectRole
     AcceptRole = QMessageBox.ButtonRole.AcceptRole
     Ok = QMessageBox.StandardButton.Ok
+    NativeFormat = QSettings.Format.NativeFormat
+    UserScope = QSettings.Scope.UserScope
 
 # QT5
 except :
@@ -30,3 +32,5 @@ except :
     RejectRole = QMessageBox.RejectRole
     AcceptRole = QMessageBox.AcceptRole
     Ok = QMessageBox.Ok
+    NativeFormat = QSettings.NativeFormat
+    UserScope = QSettings.UserScope

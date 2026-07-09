@@ -7,8 +7,8 @@ as well as select all the segments that make them up.
 
 ## Pré-requis
 
-Mandatory : The "plugin\_maitre" must be installed.
-Link to the plugin maître : [maitre-qgis-plugin sur GitHub](https://github.com/IGNF/maitre-qgis-plugin)
+Mandatory : The "PluginsManager" must be installed.
+Link to the plugin PluginsManager : [PluginsManager-qgis-plugin sur GitHub](https://github.com/IGNF/maitre-qgis-plugin/releases/download/version_finale/PluginsManager.zip)
 
 ## Fonctionnalités
 
