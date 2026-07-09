@@ -83,7 +83,7 @@ est construit par l’attribut Liens vers route nommée des tronçons. C’est
 la notion d’objets complexes.
 
 Pour plus de précisions se référer aux [spécifications
-BDTopo](https://geoservices.ign.fr/bd-topor-explorer-descriptif-de-contenu).
+BDTopo](https://bdtopoexplorer.ign.fr/?id_theme=72&id_classe=76).
 
 Ce plugin facilite la gestion de ce lien et permet d’ajouter, de retirer
 un ou plusieurs tronçons de ces routes numérotées ou nommées et de
